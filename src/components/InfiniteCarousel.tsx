@@ -23,7 +23,6 @@ const InfiniteCarousel = () => {
     const visibleImages = [];
     for (let i = -2; i <= 2; i++) {
       let index = currentIndex + i;
-      // Handle wrapping around
       if (index < 0) index = images.length + index;
       if (index >= images.length) index = index - images.length;
       visibleImages.push({ index, image: images[index] });
@@ -42,28 +41,28 @@ const InfiniteCarousel = () => {
   return (
     <div className="relative w-full max-w-7xl mx-auto px-4 py-12">
       <div className="overflow-hidden relative">
-        <div className="flex items-center justify-center gap-4 min-h-[400px]">
+        <div className="flex items-center justify-center gap-4 min-h-[300px]">
           {getVisibleImages().map(({ index, image }, position) => (
             <div
               key={index}
               className={cn(
-                "transition-all duration-500 ease-in-out absolute transform",
+                "transition-all duration-700 ease-in-out absolute transform",
                 {
                   // Center image
-                  "z-30 scale-100 opacity-100": position === 2,
+                  "z-30 translate-x-0": position === 2,
                   // Left images
-                  "z-20 -translate-x-[120%] scale-90 opacity-70": position === 1,
-                  "z-10 -translate-x-[220%] scale-80 opacity-40": position === 0,
+                  "z-20 -translate-x-[110%]": position === 1,
+                  "z-10 -translate-x-[220%]": position === 0,
                   // Right images
-                  "z-20 translate-x-[120%] scale-90 opacity-70": position === 3,
-                  "z-10 translate-x-[220%] scale-80 opacity-40": position === 4,
+                  "z-20 translate-x-[110%]": position === 3,
+                  "z-10 translate-x-[220%]": position === 4,
                 }
               )}
             >
               <img
                 src={image}
                 alt={`Slide ${index + 1}`}
-                className="w-[500px] h-[300px] object-cover rounded-lg shadow-xl"
+                className="w-[400px] h-[250px] object-cover rounded-lg shadow-lg"
                 loading="lazy"
               />
             </div>
