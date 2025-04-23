@@ -87,7 +87,7 @@ const InfiniteCarousel = () => {
             <div
               key={index}
               className={cn(
-                "transition-all duration-500 ease-in-out absolute transform",
+                "transition-all duration-100 ease-in-out absolute transform", // Changed duration to 100ms
                 {
                   "z-30 translate-x-0": position === 2,
                   "z-20 -translate-x-[110%]": position === 1,
