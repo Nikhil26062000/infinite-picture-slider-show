@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -18,6 +18,33 @@ const images = [
 
 const InfiniteCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
+  // Preload images when component mounts
+  useEffect(() => {
+    const preloadImages = async () => {
+      const imagePromises = images.map((src) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+      });
+      
+      try {
+        await Promise.all(imagePromises);
+        setImagesLoaded(true);
+        console.log('All images preloaded successfully');
+      } catch (error) {
+        console.error('Error preloading images:', error);
+        // Still set as loaded even if some images fail to load
+        setImagesLoaded(true);
+      }
+    };
+
+    preloadImages();
+  }, []);
 
   const getVisibleImages = () => {
     const visibleImages = [];
@@ -87,7 +114,7 @@ const InfiniteCarousel = () => {
             <div
               key={index}
               className={cn(
-                "transition-all duration-100 ease-in-out absolute transform", // Changed duration to 100ms
+                "transition-all duration-100 ease-in-out absolute transform", // Duration remains at 100ms
                 {
                   "z-30 translate-x-0": position === 2,
                   "z-20 -translate-x-[110%]": position === 1,
@@ -101,7 +128,8 @@ const InfiniteCarousel = () => {
                 src={image}
                 alt={`Slide ${index + 1}`}
                 className="w-[400px] h-[250px] object-cover rounded-lg shadow-lg"
-                loading="lazy"
+                loading="eager"
+                decoding="sync"
               />
             </div>
           ))}
@@ -114,6 +142,7 @@ const InfiniteCarousel = () => {
           variant="outline"
           size="icon"
           className="rounded-full"
+          disabled={!imagesLoaded}
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -122,6 +151,7 @@ const InfiniteCarousel = () => {
           variant="outline"
           size="icon"
           className="rounded-full"
+          disabled={!imagesLoaded}
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
